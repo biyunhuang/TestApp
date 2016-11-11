@@ -10,11 +10,14 @@
 
     <style name="CustomActionBar" parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse">
         <item name="android:displayOptions">showTitle</item>
+        <item name="actionModeShareDrawable">@drawable/share</item>
     </style>
 
     <style name="ActionBarOverflowButtonStyle" parent="android:Widget.ActionButton.Overflow">
         <item name="android:src">@drawable/setting</item>
         <item name="android:textSize">14sp</item>
     </style>
+
+
 
 </resources>

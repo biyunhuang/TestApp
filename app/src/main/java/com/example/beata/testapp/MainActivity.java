@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.ViewConfiguration;
 import android.view.Window;
 import android.widget.SearchView;
+import android.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,6 +62,10 @@ public class MainActivity extends Activity {
             }
         });
 
+        MenuItem shareItem = menu.findItem(R.id.menu_item_share);
+        ShareActionProvider shareActionProvider = (ShareActionProvider) shareItem.getActionProvider();
+        setShareIntent(shareActionProvider);
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -105,6 +110,17 @@ public class MainActivity extends Activity {
             menuKeyField.setBoolean(config, false);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void setShareIntent(ShareActionProvider provider) {
+        if (provider != null) {
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType("text/plain");
+            shareIntent.putExtra(Intent.EXTRA_TEXT,"body goes here");
+            Intent chooserIntent = Intent.createChooser(shareIntent, "choose app");
+
+            provider.setShareIntent(chooserIntent);
         }
     }
 

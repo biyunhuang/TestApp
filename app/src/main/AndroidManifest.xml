@@ -9,6 +9,11 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.NFC"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
+    <!-- true:只有在NFC可以使用时才能运行 -->
+    <uses-feature android:name="android.hardware.nfc" android:required="false"/>
 
     <application
         android:allowBackup="true"
@@ -33,6 +38,11 @@
             android:theme="@style/CustomAppTheme"
             android:label="@string/title_second_activity"
             android:parentActivityName=".MainActivity"/>
+
+        <activity android:name=".ThirdActivity"
+                  android:theme="@style/CustomAppTheme"
+                  android:label="@string/title_third_activity"
+                  android:parentActivityName=".MainActivity"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"

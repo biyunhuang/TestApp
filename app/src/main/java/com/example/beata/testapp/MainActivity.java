@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.Window;
 import android.widget.SearchView;
@@ -16,7 +17,7 @@ import android.widget.Toast;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements View.OnClickListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +42,8 @@ public class MainActivity extends Activity {
         textView.setText(msg);
 
         setOverflowShowingAlways();
+
+        findViewById(R.id.btn_thirdPage).setOnClickListener(this);
     }
 
     @Override
@@ -99,6 +102,18 @@ public class MainActivity extends Activity {
             }
         }
         return super.onMenuOpened(featureId, menu);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.btn_thirdPage:
+                Intent intent = new Intent(MainActivity.this, ThirdActivity.class);
+                startActivity(intent);
+                break;
+            default:
+                break;
+        }
     }
 
     private void setOverflowShowingAlways() {

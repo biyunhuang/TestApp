@@ -1,4 +1,4 @@
-package com.example.beata.testapp;
+package com.example.beata.testapp.utils;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;

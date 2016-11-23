@@ -6,6 +6,25 @@
     <string name="action_search">search</string>
     <string name="title_second_activity">second</string>
     <string name="title_third_activity">third</string>
+    <string name="title_bitmap_activity">bitmap</string>
     <string name="action_like">like us</string>
     <string name="action_user">user center</string>
+
+    <string-array name="url_list">
+        <item>http://cdn-img.easyicon.net/png/11354/1135457.gif</item>
+        <item>http://cdn-img.easyicon.net/png/11354/1135463.gif</item>
+        <item>http://cdn-img.easyicon.net/png/5155/515598.gif</item>
+        <item>http://cdn-img.easyicon.net/png/5155/515597.gif</item>
+        <item>http://cdn-img.easyicon.net/png/11354/1135461.gif</item>
+        <item>http://cdn-img.easyicon.net/png/5155/515595.gif</item>
+        <item>http://cdn-img.easyicon.net/png/5155/515594.gif</item>
+        <item>http://cdn-img.easyicon.net/png/5155/515593.gif</item>
+        <item>http://cdn-img.easyicon.net/png/5155/515592.gif</item>
+        <item>http://cdn-img.easyicon.net/png/11353/1135348.gif</item>
+        <item>http://cdn-img.easyicon.net/png/5155/515587.gif</item>
+        <item>http://cdn-img.easyicon.net/png/5155/515586.gif</item>
+        <item>http://cdn-img.easyicon.net/png/11869/1186963.gif</item>
+        <item>http://cdn-img.easyicon.net/png/11869/1186957.gif</item>
+        <item>http://cdn-img.easyicon.net/png/11354/1135458.gif</item>
+    </string-array>
 </resources>

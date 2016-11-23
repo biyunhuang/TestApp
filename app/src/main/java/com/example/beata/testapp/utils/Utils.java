@@ -1,4 +1,4 @@
-package com.example.beata.testapp;
+package com.example.beata.testapp.utils;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;

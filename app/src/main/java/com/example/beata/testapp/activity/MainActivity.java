@@ -1,4 +1,4 @@
-package com.example.beata.testapp;
+package com.example.beata.testapp.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -13,6 +13,10 @@ import android.widget.SearchView;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.beata.testapp.utils.DeviceInfoUtil;
+import com.example.beata.testapp.utils.DeviceInfoUtil2;
+import com.example.beata.testapp.R;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -32,7 +36,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 +"androidid = "+DeviceInfoUtil2.getAndroidId(this)+"\n"
                 +"ip = "+DeviceInfoUtil2.getIpAddresses(this)+"\n"
                 +"operation = "+DeviceInfoUtil2.getOperator(this)+"\n"
-                +"netType = "+DeviceInfoUtil.getNetworkStatus(this)+"\n"
+                +"netType = "+ DeviceInfoUtil.getNetworkStatus(this)+"\n"
                 +"make = "+DeviceInfoUtil2.getVendor()+"\n"
                 +"model = "+DeviceInfoUtil2.getPhoneDeviceModel()+"\n"
                 +"os version = "+DeviceInfoUtil2.getAndroidVersion()+"\n"
@@ -44,6 +48,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
         setOverflowShowingAlways();
 
         findViewById(R.id.btn_thirdPage).setOnClickListener(this);
+        findViewById(R.id.btn_bitmap).setOnClickListener(this);
     }
 
     @Override
@@ -110,6 +115,10 @@ public class MainActivity extends Activity implements View.OnClickListener{
             case R.id.btn_thirdPage:
                 Intent intent = new Intent(MainActivity.this, ThirdActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.btn_bitmap:
+                Intent intent2 = new Intent(MainActivity.this, BitmapActivity.class);
+                startActivity(intent2);
                 break;
             default:
                 break;

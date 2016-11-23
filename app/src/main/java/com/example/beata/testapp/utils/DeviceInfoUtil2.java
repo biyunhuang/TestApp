@@ -1,4 +1,4 @@
-package com.example.beata.testapp;
+package com.example.beata.testapp.utils;
 
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -106,7 +106,7 @@ public class DeviceInfoUtil2 {
 			PackageInfo packInfo = packageManager.getPackageInfo(
 					aContext.getPackageName(),  0);
 			String version = packInfo.versionName;
-            Log.d("versionName","version = "+Utils.encryptSHA1(version));
+            Log.d("versionName","version = "+ Utils.encryptSHA1(version));
 			return version;
 		} catch (PackageManager.NameNotFoundException e) {
 			e.printStackTrace();

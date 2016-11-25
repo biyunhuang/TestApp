@@ -11,7 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.beata.testapp.R;
-import com.example.beata.testapp.task.ImageDownloader;
+import com.example.beata.testapp.imageloader.ImageDownloader;
+import com.example.beata.testapp.imageloader.ImageLoaderConfig;
 
 /**
  * Created by huangbiyun on 16-11-23.
@@ -22,11 +23,12 @@ public class BitmapActivity extends Activity {
     GridView gridView;
     String[] urlArray;
 
+    private ImageDownloader imageDownloader;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bitmap);
-
         /*imageView = (ImageView)findViewById(R.id.img_sampleize);
         ViewTreeObserver viewTreeObserver = imageView.getViewTreeObserver();
         viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -38,6 +40,13 @@ public class BitmapActivity extends Activity {
             }
         });*/
 
+        ImageLoaderConfig config = new ImageLoaderConfig.Builder(getApplicationContext())
+                .shouldCache(true)
+                .setCacheType(ImageLoaderConfig.CacheType.DISK)
+                .build();
+        ImageDownloader.getInstance().init(config);
+        imageDownloader = ImageDownloader.getInstance();
+
         urlArray = getResources().getStringArray(R.array.url_list);
 
         gridView = (GridView) findViewById(R.id.gridview);
@@ -45,10 +54,7 @@ public class BitmapActivity extends Activity {
     }
 
 
-
     class ImageAdapter extends BaseAdapter{
-
-        ImageDownloader imageDownloader;
 
         @Override
         public int getCount() {
@@ -77,7 +83,6 @@ public class BitmapActivity extends Activity {
             }else{
                 holder = (ItemViewHolder)convertView.getTag();
             }
-            imageDownloader = new ImageDownloader();
             imageDownloader.download(urlArray[position],holder.imageView);
             holder.textView.setText("img-"+position);
             return convertView;

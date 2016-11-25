@@ -1,4 +1,4 @@
-package com.example.beata.testapp.task;
+package com.example.beata.testapp.imageloader;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;

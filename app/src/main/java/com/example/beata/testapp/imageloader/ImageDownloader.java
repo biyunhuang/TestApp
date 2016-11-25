@@ -1,4 +1,4 @@
-package com.example.beata.testapp.task;
+package com.example.beata.testapp.imageloader;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.example.beata.testapp.imageloader.cache.ImageCache;
 import com.example.beata.testapp.utils.BitmapUtils;
 
 import java.lang.ref.WeakReference;
@@ -17,12 +18,42 @@ import java.lang.ref.WeakReference;
  */
 public class ImageDownloader {
 
+    private static ImageDownloader  mInstance;
+
+    private ImageLoaderConfig imageLoaderConfig;
+    private ImageCache imageCache;
+
+
+    public static synchronized ImageDownloader getInstance(){
+        if(null == mInstance){
+            mInstance =  new ImageDownloader();
+        }
+        return mInstance;
+    }
+
+    public void init(ImageLoaderConfig config){
+        if (config == null) {
+            throw new IllegalArgumentException("ImageLoader configuration can not be initialized with null");
+        }
+        imageLoaderConfig = config;
+        imageCache = imageLoaderConfig.imageCache;
+    }
+
     public void download(String url, ImageView imageView) {
+        checkConfiguration();
         if(cancelPotentialDownload(url, imageView)){
-            BitmapDownloaderTask task = new BitmapDownloaderTask(imageView);
-            DownloadedDrawable downloadedDrawable = new DownloadedDrawable(task);
-            imageView.setImageDrawable(downloadedDrawable); //持有 task 对象
-            task.execute(url);
+            Bitmap bitmap = null;
+            if(imageLoaderConfig.shouldCache){
+                bitmap = imageCache.getBitmapCache(url);
+            }
+            if(null != bitmap){
+                imageView.setImageBitmap(bitmap);
+            }else{
+                BitmapDownloaderTask task = new BitmapDownloaderTask(imageView);
+                DownloadedDrawable downloadedDrawable = new DownloadedDrawable(task);
+                imageView.setImageDrawable(downloadedDrawable); //持有 task 对象
+                task.execute(url);
+            }
         }else{
             Log.i("ImageDownloader", "已经启动task啦 不需要加载");
         }
@@ -42,18 +73,18 @@ public class ImageDownloader {
         protected Bitmap doInBackground(String... params) {
             // params comes from the execute() call: params[0] is the url.
             Log.i("ImageDownloader", "doInBackground url  = "+params[0]);
-            return BitmapUtils.downloadBitmap(params[0]);
+            url = params[0];
+            return BitmapUtils.downloadBitmap(url);
         }
 
         @Override
         // Once the image is downloaded, associates it to the imageView
         protected void onPostExecute(Bitmap bitmap) {
-            if(null == bitmap){
-                Log.e("ImageDownloader", "onPostExecute bitmap = null");
+            if(imageLoaderConfig.shouldCache && null != bitmap){
+                 imageCache.setBitmapCache(url, bitmap);
             }
             if (isCancelled()) {
                 bitmap = null;
-                Log.e("ImageDownloader", "isCancelled");
             }
 
             if (imageViewReference != null) {
@@ -63,11 +94,7 @@ public class ImageDownloader {
                     // Change bitmap only if this process is still associated with it
                     if (this == bitmapDownloaderTask) {
                         imageView.setImageBitmap(bitmap);
-                    }else{
-                        Log.i("ImageDownloader", "this != bitmapDownloaderTask");
                     }
-                }else{
-                    Log.i("ImageDownloader", "imageView = null");
                 }
             }
         }
@@ -94,8 +121,8 @@ public class ImageDownloader {
      * @return
      */
     private static boolean cancelPotentialDownload(String url, ImageView imageView) {
-        BitmapDownloaderTask bitmapDownloaderTask = getBitmapDownloaderTask(imageView);
 
+        BitmapDownloaderTask bitmapDownloaderTask = getBitmapDownloaderTask(imageView);
         if (bitmapDownloaderTask != null) {
             String bitmapUrl = bitmapDownloaderTask.url;
             if ((bitmapUrl == null) || (!bitmapUrl.equals(url))) {
@@ -117,5 +144,11 @@ public class ImageDownloader {
             }
         }
         return null;
+    }
+
+    private void checkConfiguration() {
+        if (imageLoaderConfig == null) {
+            throw new IllegalStateException("ImageLoader must be init with configuration before using");
+        }
     }
 }

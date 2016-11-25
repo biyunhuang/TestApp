@@ -1,4 +1,4 @@
-package com.example.beata.testapp.task;
+package com.example.beata.testapp.imageloader;
 
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;

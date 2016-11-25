@@ -4,7 +4,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 
-import com.example.beata.testapp.task.BitmapWorkerTask;
+import com.example.beata.testapp.imageloader.BitmapWorkerTask;
 
 import java.lang.ref.WeakReference;
 

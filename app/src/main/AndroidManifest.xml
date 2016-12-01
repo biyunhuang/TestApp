@@ -53,6 +53,31 @@
                   android:label="@string/title_bitmap_activity"
                   android:parentActivityName=".activity.MainActivity"/>
 
+        <activity android:name=".activity.anim.AnimActivity"
+                  android:theme="@style/CustomAppTheme"
+                  android:label="@string/title_anim_activity"
+                  android:parentActivityName=".activity.MainActivity"/>
+
+        <activity android:name=".activity.anim.ScreenSlidePagerActivity"
+                  android:theme="@style/CustomAppTheme"
+                  android:label="@string/title_anim_activity"
+                  android:parentActivityName=".activity.anim.AnimActivity"/>
+
+        <activity android:name=".activity.anim.CardFlipActivity"
+                  android:theme="@style/CustomAppTheme"
+                  android:label="@string/title_anim_activity"
+                  android:parentActivityName=".activity.anim.AnimActivity"/>
+
+        <activity android:name=".activity.anim.ZoomActivity"
+                  android:theme="@style/CustomAppTheme"
+                  android:label="@string/title_zoom_activity"
+                  android:parentActivityName=".activity.anim.AnimActivity"/>
+
+        <activity android:name=".activity.anim.LayoutChangesActivity"
+                  android:theme="@style/CustomAppTheme"
+                  android:label="@string/title_zoom_activity"
+                  android:parentActivityName=".activity.anim.AnimActivity"/>
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.example.beata.testapp.fileprovider"

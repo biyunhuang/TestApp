@@ -14,6 +14,7 @@ import android.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.beata.testapp.activity.anim.AnimActivity;
 import com.example.beata.testapp.utils.DeviceInfoUtil;
 import com.example.beata.testapp.utils.DeviceInfoUtil2;
 import com.example.beata.testapp.R;
@@ -49,6 +50,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
         findViewById(R.id.btn_thirdPage).setOnClickListener(this);
         findViewById(R.id.btn_bitmap).setOnClickListener(this);
+        findViewById(R.id.btn_anim).setOnClickListener(this);
     }
 
     @Override
@@ -119,6 +121,10 @@ public class MainActivity extends Activity implements View.OnClickListener{
             case R.id.btn_bitmap:
                 Intent intent2 = new Intent(MainActivity.this, BitmapActivity.class);
                 startActivity(intent2);
+                break;
+            case R.id.btn_anim:
+                Intent intent3 = new Intent(MainActivity.this, AnimActivity.class);
+                startActivity(intent3);
                 break;
             default:
                 break;

@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.beata.testapp.activity.anim.AnimActivity;
+import com.example.beata.testapp.activity.network.HttpExampleActivity;
 import com.example.beata.testapp.utils.DeviceInfoUtil;
 import com.example.beata.testapp.utils.DeviceInfoUtil2;
 import com.example.beata.testapp.R;
@@ -51,6 +52,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
         findViewById(R.id.btn_thirdPage).setOnClickListener(this);
         findViewById(R.id.btn_bitmap).setOnClickListener(this);
         findViewById(R.id.btn_anim).setOnClickListener(this);
+        findViewById(R.id.btn_network).setOnClickListener(this);
     }
 
     @Override
@@ -115,7 +117,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btn_thirdPage:
-                Intent intent = new Intent(MainActivity.this, ThirdActivity.class);
+                Intent intent = new Intent(MainActivity.this, CameraActivity.class);
                 startActivity(intent);
                 break;
             case R.id.btn_bitmap:
@@ -125,6 +127,10 @@ public class MainActivity extends Activity implements View.OnClickListener{
             case R.id.btn_anim:
                 Intent intent3 = new Intent(MainActivity.this, AnimActivity.class);
                 startActivity(intent3);
+                break;
+            case R.id.btn_network:
+                Intent intent4 = new Intent(MainActivity.this, HttpExampleActivity.class);
+                startActivity(intent4);
                 break;
             default:
                 break;

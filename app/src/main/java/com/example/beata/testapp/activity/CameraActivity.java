@@ -25,7 +25,7 @@ import java.util.Date;
 /**
  * Created by huangbiyun on 16-11-11.
  */
-public class ThirdActivity extends Activity implements View.OnClickListener{
+public class CameraActivity extends Activity implements View.OnClickListener{
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int REQUEST_TAKE_PHOTO = 2;

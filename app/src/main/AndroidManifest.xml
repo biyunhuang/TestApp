@@ -3,11 +3,12 @@
     package="com.example.beata.testapp" >
 
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:required="true" android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission android:name="android.permission.NFC"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
@@ -43,7 +44,7 @@
             android:label="@string/title_second_activity"
             android:parentActivityName=".activity.MainActivity"/>
 
-        <activity android:name=".activity.ThirdActivity"
+        <activity android:name=".activity.CameraActivity"
                   android:theme="@style/CustomAppTheme"
                   android:label="@string/title_third_activity"
                   android:parentActivityName=".activity.MainActivity"/>
@@ -77,6 +78,18 @@
                   android:theme="@style/CustomAppTheme"
                   android:label="@string/title_zoom_activity"
                   android:parentActivityName=".activity.anim.AnimActivity"/>
+
+        <activity android:name=".activity.network.HttpExampleActivity"
+                  android:theme="@style/CustomAppTheme"
+                  android:label="@string/title_http_activity"
+                  android:parentActivityName=".activity.MainActivity"/>
+
+        <activity android:name=".activity.network.SettingsActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MANAGE_NETWORK_USAGE"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
 
         <provider
             android:name="android.support.v4.content.FileProvider"

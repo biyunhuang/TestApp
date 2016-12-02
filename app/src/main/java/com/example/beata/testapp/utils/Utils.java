@@ -2,6 +2,8 @@ package com.example.beata.testapp.utils;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Environment;
 
 import com.example.beata.testapp.TestAppApplication;
@@ -87,5 +89,13 @@ public class Utils {
         return 1;
     }
 
+    public static boolean isNetworkAvaiable(Context context){
+        ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = manager.getActiveNetworkInfo();
+        if(null != networkInfo && networkInfo.isConnected()){
+            return true;
+        }
+        return false;
+    }
 
 }

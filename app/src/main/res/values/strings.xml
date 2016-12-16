@@ -5,6 +5,7 @@
     <string name="action_settings">Settings</string>
     <string name="action_search">search</string>
     <string name="title_second_activity">second</string>
+    <string name="title_myview_activity">my view</string>
     <string name="title_third_activity">third</string>
     <string name="title_bitmap_activity">bitmap</string>
     <string name="title_anim_activity">anim</string>

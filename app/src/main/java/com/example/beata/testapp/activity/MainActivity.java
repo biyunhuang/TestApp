@@ -14,11 +14,11 @@ import android.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.beata.testapp.R;
 import com.example.beata.testapp.activity.anim.AnimActivity;
 import com.example.beata.testapp.activity.network.HttpExampleActivity;
 import com.example.beata.testapp.utils.DeviceInfoUtil;
 import com.example.beata.testapp.utils.DeviceInfoUtil2;
-import com.example.beata.testapp.R;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -53,6 +53,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
         findViewById(R.id.btn_bitmap).setOnClickListener(this);
         findViewById(R.id.btn_anim).setOnClickListener(this);
         findViewById(R.id.btn_network).setOnClickListener(this);
+
+
     }
 
     @Override
@@ -91,6 +93,10 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 /*Toast.makeText(this,"settings clcik",Toast.LENGTH_SHORT).show();*/
                 Intent intent = new Intent(this,SecondActivity.class);
                 startActivity(intent);
+                return true;
+            case R.id.action_user:
+                Intent intent2 = new Intent(this,MyViewActivity.class);
+                startActivity(intent2);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -16,4 +16,40 @@ allprojects {
     repositories {
         jcenter()
     }
+
+    apply plugin: 'idea'
+
+
+    task allTask << {
+        println project.name
+    }
+}
+
+apply plugin: DateAndTimePlugin
+
+dateAndTime {
+    timeFormat = 'HH:mm:ss.SSS'
+    dateFormat = 'MM/dd/yyyy'
+}
+
+class DateAndTimePlugin implements Plugin<Project>{
+
+    @Override
+    void apply(Project project) {
+
+        project.extensions.create("dateAndTime", DateAndTimePluginExtension)
+
+        project.task('showTime') << {
+            println "current time is "+ new Date().format(project.dateAndTime.timeFormat)
+        }
+
+        project.tasks.create('showDate') << {
+            println "current date is "+ new Date().format(project.dateAndTime.dateFormat)
+        }
+    }
+}
+
+class DateAndTimePluginExtension {
+    String timeFormat = "MM/dd/yyyy HH:mm:ss.SSS"
+    String dateFormat = "yyyy-MM-dd"
 }

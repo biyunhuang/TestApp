@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,7 +29,7 @@ import java.lang.ref.WeakReference;
 /**
  * Created by huangbiyun on 16-12-1.
  */
-public class HttpExampleActivity extends Activity {
+public class HttpExampleActivity extends Activity implements View.OnClickListener{
 
     private static final String DEBUG_TAG = "NetworkStatusExample";
     private static String URL = "http://img2.imgtn.bdimg.com/it/u=1320686180,3651175792&fm=21&gp=0.jpg";
@@ -62,6 +63,8 @@ public class HttpExampleActivity extends Activity {
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         receiver = new NetworkReceiver();
         registerReceiver(receiver, filter);
+
+        findViewById(R.id.btn_volley).setOnClickListener(this);
     }
 
     @Override
@@ -175,6 +178,17 @@ public class HttpExampleActivity extends Activity {
                     imageView.setImageBitmap(bitmap);
                 }
             }
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.btn_volley:
+                startActivity(new Intent(HttpExampleActivity.this, VolleyRequestActivity.class));
+                break;
+            default:
+                break;
         }
     }
 }

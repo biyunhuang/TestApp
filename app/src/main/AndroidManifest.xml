@@ -90,6 +90,11 @@
                   android:label="@string/title_http_activity"
                   android:parentActivityName=".activity.MainActivity"/>
 
+        <activity android:name=".activity.network.VolleyRequestActivity"
+                  android:theme="@style/CustomAppTheme"
+                  android:label="@string/title_http_activity"
+                  android:parentActivityName=".activity.network.HttpExampleActivity"/>
+
         <activity android:name=".activity.network.SettingsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MANAGE_NETWORK_USAGE"/>

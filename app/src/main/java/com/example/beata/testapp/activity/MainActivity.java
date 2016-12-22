@@ -2,7 +2,12 @@ package com.example.beata.testapp.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -14,47 +19,69 @@ import android.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.beata.testapp.Constatns;
 import com.example.beata.testapp.R;
 import com.example.beata.testapp.activity.anim.AnimActivity;
 import com.example.beata.testapp.activity.network.HttpExampleActivity;
-import com.example.beata.testapp.utils.DeviceInfoUtil;
-import com.example.beata.testapp.utils.DeviceInfoUtil2;
+import com.example.beata.testapp.service.FetchAddressIntentService;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.text.DateFormat;
+import java.util.Date;
 
-public class MainActivity extends Activity implements View.OnClickListener{
+public class MainActivity extends Activity implements View.OnClickListener,
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener{
+
+    private GoogleApiClient mGoogleApiClient;
+    private Location mLastLocation;
+    private LocationRequest mLocationRequest;
+    private boolean mRequestingLocationUpdates = true;
+    private String mAddressOutput;
+
+    private TextView mTextView;
+
+    private static final String REQUESTING_LOCATION_UPDATES_KEY = "location_update_key";
+    private static final String LOCATION_KEY = "location_key";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TextView textView = (TextView)findViewById(R.id.text);
+        mTextView = (TextView)findViewById(R.id.text);
 
-        double[] local = DeviceInfoUtil2.getLocation(this);
-        String msg = "imei = "+DeviceInfoUtil2.getImei(this)+"\n"
-                +"mac = "+DeviceInfoUtil2.getMacAddress(this)+"\n"
-                +"androidid = "+DeviceInfoUtil2.getAndroidId(this)+"\n"
-                +"ip = "+DeviceInfoUtil2.getIpAddresses(this)+"\n"
-                +"operation = "+DeviceInfoUtil2.getOperator(this)+"\n"
-                +"netType = "+ DeviceInfoUtil.getNetworkStatus(this)+"\n"
-                +"make = "+DeviceInfoUtil2.getVendor()+"\n"
-                +"model = "+DeviceInfoUtil2.getPhoneDeviceModel()+"\n"
-                +"os version = "+DeviceInfoUtil2.getAndroidVersion()+"\n"
-                +"location = "+local[0]+"---"+local[1]+"\n"
-                +"resolution = "+DeviceInfoUtil2.getResolution(this)+"\n"
-                +"versionName = "+DeviceInfoUtil2.getVersionName(this);
-        textView.setText(msg);
+        createLocationRequest();
+        buildGoogleApiClient();
 
         setOverflowShowingAlways();
-
         findViewById(R.id.btn_thirdPage).setOnClickListener(this);
         findViewById(R.id.btn_bitmap).setOnClickListener(this);
         findViewById(R.id.btn_anim).setOnClickListener(this);
         findViewById(R.id.btn_network).setOnClickListener(this);
 
+        updateValuesFromBundle(savedInstanceState);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(mGoogleApiClient.isConnected() && !mRequestingLocationUpdates){
+            startLocationUpdates();
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(REQUESTING_LOCATION_UPDATES_KEY, mRequestingLocationUpdates);
+        outState.putParcelable(LOCATION_KEY, mLastLocation);
     }
 
     @Override
@@ -164,6 +191,127 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
             provider.setShareIntent(chooserIntent);
         }
+    }
+
+    private synchronized void buildGoogleApiClient(){
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int code = apiAvailability.isGooglePlayServicesAvailable(this);
+
+        if(code != ConnectionResult.SUCCESS && apiAvailability.isUserResolvableError(code)){
+            apiAvailability.getErrorDialog(this, code, 2404).show();
+        }else{
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+            mGoogleApiClient.connect();  //开启连接
+        }
+
+    }
+
+    private void createLocationRequest(){
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(1800000);
+        mLocationRequest.setFastestInterval(1200000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
+
+    private void startLocationUpdates(){
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        if(mLastLocation != null){
+            updateLocationInfo(mLastLocation);
+        }
+
+        if(mRequestingLocationUpdates){
+            startLocationUpdates(); //开启检查更新
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        mTextView.setText("get location onConnectionSuspended!");
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        mTextView.setText("get location error!");
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        //location 变化
+        mLastLocation = location;
+        updateLocationInfo(mLastLocation);
+    }
+
+    private void updateLocationInfo(Location location){
+        if(null != location){
+            mTextView.setText("update time : "+ DateFormat.getTimeInstance().format(new Date())+ " long :"+location.getLongitude() + "  lati :"+location.getLatitude());
+            startIntentService();
+        }
+    }
+
+    private void displayAddressOutput(){
+        mTextView.setText(mAddressOutput);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mRequestingLocationUpdates = false;
+        stopLocationUpdates();
+    }
+
+    private void stopLocationUpdates(){
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+    }
+
+    private void updateValuesFromBundle(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            if (savedInstanceState.keySet().contains(REQUESTING_LOCATION_UPDATES_KEY)) {
+                mRequestingLocationUpdates = savedInstanceState.getBoolean(
+                        REQUESTING_LOCATION_UPDATES_KEY);
+            }
+
+            // Update the value of mCurrentLocation from the Bundle and update the
+            // UI to show the correct latitude and longitude.
+            if (savedInstanceState.keySet().contains(LOCATION_KEY)) {
+                // Since LOCATION_KEY was found in the Bundle, we can be sure that
+                // mCurrentLocationis not null.
+                mLastLocation = savedInstanceState.getParcelable(LOCATION_KEY);
+            }
+
+            updateLocationInfo(mLastLocation);
+        }
+    }
+
+    private void startIntentService(){
+        Intent intent = new Intent(this, FetchAddressIntentService.class);
+        intent.putExtra(Constatns.LOCATION_DATA_EXTRA, mLastLocation);
+        intent.putExtra(Constatns.RECEIVER, new ResultReceiver(new Handler()){
+            @Override
+            protected void onReceiveResult(int resultCode, Bundle resultData) {
+
+                // Display the address string
+                // or an error message sent from the intent service.
+                mAddressOutput = resultData.getString(Constatns.RESULT_DATA_KEY);
+                displayAddressOutput();
+
+                // Show a toast message if an address was found.
+                if (resultCode == Constatns.SUCCESS_RESULT) {
+                    Toast.makeText(MainActivity.this, "address found",Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+        startService(intent);
     }
 
 }

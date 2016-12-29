@@ -12,6 +12,7 @@
     <string name="title_zoom_activity">zoom</string>
     <string name="title_http_activity">network</string>
     <string name="title_volley_activity">volley</string>
+    <string name="title_dynamicload_activity">dynamic load</string>
     <string name="action_like">like us</string>
     <string name="action_user">user center</string>
 

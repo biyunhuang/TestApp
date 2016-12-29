@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.example.beata.testapp.Constatns;
 import com.example.beata.testapp.R;
 import com.example.beata.testapp.activity.anim.AnimActivity;
+import com.example.beata.testapp.activity.dynamicload.DynamicLoadActivity;
 import com.example.beata.testapp.activity.network.HttpExampleActivity;
 import com.example.beata.testapp.service.FetchAddressIntentService;
 import com.google.android.gms.common.ConnectionResult;
@@ -65,6 +66,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         findViewById(R.id.btn_bitmap).setOnClickListener(this);
         findViewById(R.id.btn_anim).setOnClickListener(this);
         findViewById(R.id.btn_network).setOnClickListener(this);
+        findViewById(R.id.btn_dynamic).setOnClickListener(this);
 
         updateValuesFromBundle(savedInstanceState);
     }
@@ -72,7 +74,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
     @Override
     protected void onResume() {
         super.onResume();
-        if(mGoogleApiClient.isConnected() && !mRequestingLocationUpdates){
+        if(mGoogleApiClient != null && mGoogleApiClient.isConnected() && !mRequestingLocationUpdates){
             startLocationUpdates();
         }
     }
@@ -165,6 +167,10 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 Intent intent4 = new Intent(MainActivity.this, HttpExampleActivity.class);
                 startActivity(intent4);
                 break;
+            case R.id.btn_dynamic:
+                Intent intent5 = new Intent(MainActivity.this, DynamicLoadActivity.class);
+                startActivity(intent5);
+                break;
             default:
                 break;
         }
@@ -205,7 +211,9 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     .addOnConnectionFailedListener(this)
                     .addApi(LocationServices.API)
                     .build();
-            mGoogleApiClient.connect();  //开启连接
+            if(null != mGoogleApiClient){
+                mGoogleApiClient.connect();  //开启连接
+            }
         }
 
     }
@@ -269,7 +277,9 @@ public class MainActivity extends Activity implements View.OnClickListener,
     }
 
     private void stopLocationUpdates(){
-        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        if(null != mGoogleApiClient){
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        }
     }
 
     private void updateValuesFromBundle(Bundle savedInstanceState) {

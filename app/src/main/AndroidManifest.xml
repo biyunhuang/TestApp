@@ -95,6 +95,22 @@
                   android:label="@string/title_http_activity"
                   android:parentActivityName=".activity.network.HttpExampleActivity"/>
 
+        <activity android:name=".activity.dynamicload.DynamicLoadActivity"
+                  android:theme="@style/CustomAppTheme"
+                  android:label="@string/title_dynamicload_activity"
+                  android:parentActivityName=".activity.MainActivity"/>
+
+        <activity android:name=".activity.dynamicload.ProxyActivity"
+                  android:theme="@style/CustomAppTheme"
+                  android:label="@string/title_dynamicload_activity"
+                  android:parentActivityName=".activity.dynamicload.DynamicLoadActivity">
+            <intent-filter>
+                <action android:name="com.ryg.dynamicloadhost.VIEW" />
+                <category android:name="android.intent.category.DEFAULT"></category>
+            </intent-filter>
+
+        </activity>
+
         <activity android:name=".activity.network.SettingsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MANAGE_NETWORK_USAGE"/>

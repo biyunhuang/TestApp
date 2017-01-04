@@ -1,23 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.beata.testapp" >
+<manifest package="com.example.beata.testapp"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:required="true" android:name="android.permission.CHANGE_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission
+        android:name="android.permission.CHANGE_WIFI_STATE"
+        android:required="true"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission android:name="android.permission.NFC"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <!-- true:只有在NFC可以使用时才能运行 -->
-    <uses-feature android:name="android.hardware.nfc" android:required="false"/>
-    <uses-feature android:name="android.hardware.camera" android:required="true"/>
+    <uses-feature
+        android:name="android.hardware.nfc"
+        android:required="false"/>
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true"/>
 
     <application
         android:name=".TestAppApplication"
@@ -25,112 +30,117 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".activity.MainActivity"
-            android:theme="@style/CustomAppTheme"
+            android:label="@string/app_name"
             android:logo="@mipmap/ic_launcher"
-            android:label="@string/app_name" >
+            android:theme="@style/CustomAppTheme">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
         <activity
             android:name=".activity.SecondActivity"
-            android:theme="@style/CustomAppTheme"
             android:label="@string/title_second_activity"
-            android:parentActivityName=".activity.MainActivity"/>
-
+            android:parentActivityName=".activity.MainActivity"
+            android:theme="@style/CustomAppTheme"/>
         <activity
             android:name=".activity.MyViewActivity"
-            android:theme="@style/CustomAppTheme"
             android:label="@string/title_myview_activity"
-            android:parentActivityName=".activity.MainActivity"/>
-
-        <activity android:name=".activity.CameraActivity"
-                  android:theme="@style/CustomAppTheme"
-                  android:label="@string/title_third_activity"
-                  android:parentActivityName=".activity.MainActivity"/>
-
-        <activity android:name=".activity.BitmapActivity"
-                  android:theme="@style/CustomAppTheme"
-                  android:label="@string/title_bitmap_activity"
-                  android:parentActivityName=".activity.MainActivity"/>
-
-        <activity android:name=".activity.anim.AnimActivity"
-                  android:theme="@style/CustomAppTheme"
-                  android:label="@string/title_anim_activity"
-                  android:parentActivityName=".activity.MainActivity"/>
-
-        <activity android:name=".activity.anim.ScreenSlidePagerActivity"
-                  android:theme="@style/CustomAppTheme"
-                  android:label="@string/title_anim_activity"
-                  android:parentActivityName=".activity.anim.AnimActivity"/>
-
-        <activity android:name=".activity.anim.CardFlipActivity"
-                  android:theme="@style/CustomAppTheme"
-                  android:label="@string/title_anim_activity"
-                  android:parentActivityName=".activity.anim.AnimActivity"/>
-
-        <activity android:name=".activity.anim.ZoomActivity"
-                  android:theme="@style/CustomAppTheme"
-                  android:label="@string/title_zoom_activity"
-                  android:parentActivityName=".activity.anim.AnimActivity"/>
-
-        <activity android:name=".activity.anim.LayoutChangesActivity"
-                  android:theme="@style/CustomAppTheme"
-                  android:label="@string/title_zoom_activity"
-                  android:parentActivityName=".activity.anim.AnimActivity"/>
-
-        <activity android:name=".activity.network.HttpExampleActivity"
-                  android:theme="@style/CustomAppTheme"
-                  android:label="@string/title_http_activity"
-                  android:parentActivityName=".activity.MainActivity"/>
-
-        <activity android:name=".activity.network.VolleyRequestActivity"
-                  android:theme="@style/CustomAppTheme"
-                  android:label="@string/title_http_activity"
-                  android:parentActivityName=".activity.network.HttpExampleActivity"/>
-
-        <activity android:name=".activity.dynamicload.DynamicLoadActivity"
-                  android:theme="@style/CustomAppTheme"
-                  android:label="@string/title_dynamicload_activity"
-                  android:parentActivityName=".activity.MainActivity"/>
-
-        <activity android:name=".activity.dynamicload.ProxyActivity"
-                  android:theme="@style/CustomAppTheme"
-                  android:label="@string/title_dynamicload_activity"
-                  android:parentActivityName=".activity.dynamicload.DynamicLoadActivity">
+            android:parentActivityName=".activity.MainActivity"
+            android:theme="@style/CustomAppTheme"/>
+        <activity
+            android:name=".activity.CameraActivity"
+            android:label="@string/title_third_activity"
+            android:parentActivityName=".activity.MainActivity"
+            android:theme="@style/CustomAppTheme"/>
+        <activity
+            android:name=".activity.BitmapActivity"
+            android:label="@string/title_bitmap_activity"
+            android:parentActivityName=".activity.MainActivity"
+            android:theme="@style/CustomAppTheme"/>
+        <activity
+            android:name=".activity.anim.AnimActivity"
+            android:label="@string/title_anim_activity"
+            android:parentActivityName=".activity.MainActivity"
+            android:theme="@style/CustomAppTheme"/>
+        <activity
+            android:name=".activity.anim.ScreenSlidePagerActivity"
+            android:label="@string/title_anim_activity"
+            android:parentActivityName=".activity.anim.AnimActivity"
+            android:theme="@style/CustomAppTheme"/>
+        <activity
+            android:name=".activity.anim.CardFlipActivity"
+            android:label="@string/title_anim_activity"
+            android:parentActivityName=".activity.anim.AnimActivity"
+            android:theme="@style/CustomAppTheme"/>
+        <activity
+            android:name=".activity.anim.ZoomActivity"
+            android:label="@string/title_zoom_activity"
+            android:parentActivityName=".activity.anim.AnimActivity"
+            android:theme="@style/CustomAppTheme"/>
+        <activity
+            android:name=".activity.anim.LayoutChangesActivity"
+            android:label="@string/title_zoom_activity"
+            android:parentActivityName=".activity.anim.AnimActivity"
+            android:theme="@style/CustomAppTheme"/>
+        <activity
+            android:name=".activity.network.HttpExampleActivity"
+            android:label="@string/title_http_activity"
+            android:parentActivityName=".activity.MainActivity"
+            android:theme="@style/CustomAppTheme"/>
+        <activity
+            android:name=".activity.network.VolleyRequestActivity"
+            android:label="@string/title_http_activity"
+            android:parentActivityName=".activity.network.HttpExampleActivity"
+            android:theme="@style/CustomAppTheme"/>
+        <activity
+            android:name=".activity.dynamicload.DynamicLoadActivity"
+            android:label="@string/title_dynamicload_activity"
+            android:parentActivityName=".activity.MainActivity"
+            android:theme="@style/CustomAppTheme"/>
+        <activity
+            android:name=".activity.dynamicload.ProxyActivity"
+            android:label="@string/title_dynamicload_activity"
+            android:parentActivityName=".activity.dynamicload.DynamicLoadActivity"
+            android:theme="@style/CustomAppTheme">
             <intent-filter>
-                <action android:name="com.ryg.dynamicloadhost.VIEW" />
-                <category android:name="android.intent.category.DEFAULT"></category>
+                <action android:name="com.ryg.dynamicloadhost.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
-
         </activity>
-
         <activity android:name=".activity.network.SettingsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MANAGE_NETWORK_USAGE"/>
+
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
+        </activity>
+
+        <activity android:name=".activity.ServiceTestActivity"
+            android:parentActivityName=".activity.MainActivity">
         </activity>
 
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.example.beata.testapp.fileprovider"
-            android:grantUriPermissions="true"
-            android:exported="false">
+            android:exported="false"
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/filepaths" />
+                android:resource="@xml/filepaths"/>
         </provider>
 
         <service
             android:name=".service.FetchAddressIntentService"
             android:exported="false"/>
+
+        <service android:name=".service.MyService"/>
+
+        <service android:name=".service.PhantomService"/>
 
     </application>
 

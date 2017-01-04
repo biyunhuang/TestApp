@@ -67,6 +67,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         findViewById(R.id.btn_anim).setOnClickListener(this);
         findViewById(R.id.btn_network).setOnClickListener(this);
         findViewById(R.id.btn_dynamic).setOnClickListener(this);
+        findViewById(R.id.btn_service).setOnClickListener(this);
 
         updateValuesFromBundle(savedInstanceState);
     }
@@ -170,6 +171,10 @@ public class MainActivity extends Activity implements View.OnClickListener,
             case R.id.btn_dynamic:
                 Intent intent5 = new Intent(MainActivity.this, DynamicLoadActivity.class);
                 startActivity(intent5);
+                break;
+            case R.id.btn_service:
+                Intent intent6 = new Intent(MainActivity.this, ServiceTestActivity.class);
+                startActivity(intent6);
                 break;
             default:
                 break;

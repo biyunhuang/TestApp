@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -22,6 +23,7 @@ public class MyService extends Service {
     public static final String TAG = "MyService";
 
     private MyBinder myBinder = new MyBinder();
+
 
     @Override
     public void onCreate() {
@@ -53,7 +55,9 @@ public class MyService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         Log.d(TAG, "onBind()");
-        return myBinder;
+        //return myBinder;
+
+        return mAidlBinder;
     }
 
     public static synchronized Notification getNotification(Context context){
@@ -90,4 +94,18 @@ public class MyService extends Service {
         }
 
     }
+
+    IMyAidlInterface.Stub mAidlBinder = new IMyAidlInterface.Stub() {
+        @Override
+        public int plus(int a, int b) throws RemoteException {
+            return a+b;
+        }
+
+        @Override
+        public String toUpperCace(String str) throws RemoteException {
+            return str.toUpperCase();
+        }
+    };
+
+
 }

@@ -138,7 +138,11 @@
             android:name=".service.FetchAddressIntentService"
             android:exported="false"/>
 
-        <service android:name=".service.MyService"/>
+        <service android:name=".service.MyService">
+            <intent-filter>
+                <action android:name="com.example.servicetest.MyAIDLService"/>
+            </intent-filter>
+        </service>
 
         <service android:name=".service.PhantomService"/>
 

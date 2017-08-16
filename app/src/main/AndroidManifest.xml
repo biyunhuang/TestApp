@@ -124,6 +124,10 @@
             android:parentActivityName=".activity.MainActivity">
         </activity>
 
+        <activity android:name=".activity.VideoActivity"
+            android:parentActivityName=".activity.MainActivity">
+        </activity>
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.example.beata.testapp.fileprovider"

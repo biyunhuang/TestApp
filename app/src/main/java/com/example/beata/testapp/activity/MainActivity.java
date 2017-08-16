@@ -2,6 +2,10 @@ package com.example.beata.testapp.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -68,6 +72,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         findViewById(R.id.btn_network).setOnClickListener(this);
         findViewById(R.id.btn_dynamic).setOnClickListener(this);
         findViewById(R.id.btn_service).setOnClickListener(this);
+        findViewById(R.id.btn_video).setOnClickListener(this);
 
         updateValuesFromBundle(savedInstanceState);
     }
@@ -175,6 +180,10 @@ public class MainActivity extends Activity implements View.OnClickListener,
             case R.id.btn_service:
                 Intent intent6 = new Intent(MainActivity.this, ServiceTestActivity.class);
                 startActivity(intent6);
+                break;
+            case R.id.btn_video:
+                Intent intent7 = new Intent(MainActivity.this, VideoActivity.class);
+                startActivity(intent7);
                 break;
             default:
                 break;
@@ -327,6 +336,19 @@ public class MainActivity extends Activity implements View.OnClickListener,
         });
 
         startService(intent);
+
+    }
+
+    void drawTest(Canvas canvas){
+        int basex = 0;
+        int basey = 0;
+        Paint paint = new Paint();
+        paint.setColor(Color.RED);
+        //Typeface.createFromFile()
+        Typeface font = Typeface.create(Typeface.SANS_SERIF, Typeface.ITALIC);
+        paint.setTypeface(font);
+        paint.setTextSize(120);
+        canvas.drawText("good",basex, basey,paint);
     }
 
 }

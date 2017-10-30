@@ -62,8 +62,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
         mTextView = (TextView)findViewById(R.id.text);
 
-        createLocationRequest();
-        buildGoogleApiClient();
+        //createLocationRequest();
+        //buildGoogleApiClient();
 
         setOverflowShowingAlways();
         findViewById(R.id.btn_thirdPage).setOnClickListener(this);
@@ -73,6 +73,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         findViewById(R.id.btn_dynamic).setOnClickListener(this);
         findViewById(R.id.btn_service).setOnClickListener(this);
         findViewById(R.id.btn_video).setOnClickListener(this);
+        findViewById(R.id.btn_open_camera).setOnClickListener(this);
 
         updateValuesFromBundle(savedInstanceState);
     }
@@ -184,6 +185,10 @@ public class MainActivity extends Activity implements View.OnClickListener,
             case R.id.btn_video:
                 Intent intent7 = new Intent(MainActivity.this, VideoActivity.class);
                 startActivity(intent7);
+                break;
+            case R.id.btn_open_camera:
+                Intent intent8 = new Intent(MainActivity.this, OpenCameraActivity.class);
+                startActivity(intent8);
                 break;
             default:
                 break;

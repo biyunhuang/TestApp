@@ -37,7 +37,7 @@ public class VideoActivity extends Activity {
         holder = surfaceView.getHolder();
 
         //playVideo();
-       // playVideoPathAsset();
+        //playVideoPathAsset();
     }
 
     @Override
@@ -77,7 +77,7 @@ public class VideoActivity extends Activity {
             //SurfaceHolder holder = videoView.getHolder();
 
             mediaPlayer.setDataSource(fileDescriptor.getFileDescriptor());
-            mediaPlayer.prepare();
+            mediaPlayer.prepareAsync();
             mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {

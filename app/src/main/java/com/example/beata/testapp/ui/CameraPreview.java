@@ -2,57 +2,45 @@ package com.example.beata.testapp.ui;
 
 import android.content.Context;
 import android.hardware.Camera;
+import android.os.Process;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import com.example.beata.testapp.activity.OpenCameraActivity;
+import com.example.beata.testapp.utils.CameraUtils;
+
 
 /**
  * Created by huangbiyun on 2017/10/29.
  */
 
-/** A basic Camera preview class */
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
-    private SurfaceHolder mHolder;
-    private Camera mCamera;
 
-    public CameraPreview(Context context, Camera camera) {
+    private static final String TAG = CameraPreview.class.getSimpleName();
+
+    private SurfaceHolder mHolder;
+
+    public CameraPreview(Context context) {
         super(context);
-        mCamera = camera;
 
         mHolder = getHolder();
         mHolder.addCallback(this);
     }
 
+    @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        Log.d(OpenCameraActivity.TAG, "surfaceCreated");
+        Log.d("hby", "surfaceCreated threadId = "+Process.myTid());
+        CameraUtils.openFrontalCamera(CameraUtils.DESIRED_PREVIEW_FPS);
     }
 
+    @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        Log.d(OpenCameraActivity.TAG, "surfaceDestroyed");
+        CameraUtils.releaseCamera();
     }
 
+    @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
-        if (mHolder.getSurface() == null){
-            return;
-        }
-
-        try {
-            mCamera.stopPreview();
-        } catch (Exception e){
-        }
-
-        // set preview size and make any resize, rotate or
-        // reformatting changes here
-
-        try {
-            mCamera.setPreviewDisplay(mHolder);
-            mCamera.startPreview();
-
-        } catch (Exception e){
-            Log.d(OpenCameraActivity.TAG, "Error starting camera preview: " + e.getMessage());
-        }
-        Log.d(OpenCameraActivity.TAG, "surfaceChanged");
+        CameraUtils.startPreviewDisplay(holder);
     }
+
 }

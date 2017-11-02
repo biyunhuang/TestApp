@@ -31,17 +31,24 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         Log.d("hby", "surfaceCreated threadId = "+Process.myTid());
-        mCameraLoader.initCamera();
+        if (null != mCameraLoader){
+            mCameraLoader.initCamera();
+        }
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        mCameraLoader.releaseCamera();
+        if (null != mCameraLoader){
+            mCameraLoader.releaseCamera();
+        }
     }
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
-        mCameraLoader.startPreviewDisplay(holder);
+        if (null != mCameraLoader){
+            mCameraLoader.startPreviewDisplay(holder);
+            mCameraLoader.setAutoFocus();
+        }
     }
 
 }

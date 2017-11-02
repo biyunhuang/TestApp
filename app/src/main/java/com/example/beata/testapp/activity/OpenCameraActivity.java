@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.Process;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -13,6 +15,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.example.beata.testapp.R;
 import com.example.beata.testapp.ui.CameraPreview;
@@ -37,6 +40,7 @@ public class OpenCameraActivity extends Activity implements View.OnClickListener
     private Button mBtnTake;
     private Button mBtnSwitch;
 
+    private Handler mHandler;
 
 
     @Override
@@ -46,8 +50,11 @@ public class OpenCameraActivity extends Activity implements View.OnClickListener
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_open_camera);
+        mHandler = new Handler(Looper.myLooper());
 
-        mCameraLoader = new CameraLoader(OpenCameraActivity.this, true);
+        mCameraLoader = new CameraLoader(OpenCameraActivity.this, false);
+        mCameraLoader.setAutoFocusCallback(focusCallback);
+
         mCameraSurfaceView = new CameraPreview(OpenCameraActivity.this, mCameraLoader);
         FrameLayout frameLayout = (FrameLayout) findViewById(R.id.camera_preview);
         frameLayout.addView(mCameraSurfaceView);
@@ -59,6 +66,19 @@ public class OpenCameraActivity extends Activity implements View.OnClickListener
 
         Log.d("hby", "onCreate threadId = "+ Process.myTid());
     }
+
+    CameraLoader.FocusCallback focusCallback = new CameraLoader.FocusCallback() {
+        @Override
+        public void onAutoFocus(boolean success) {
+            if (success){
+                Toast.makeText(OpenCameraActivity.this,
+                        "自动聚焦成功" , Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(OpenCameraActivity.this,
+                        "自动聚焦失敗" , Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
 
     @Override
     protected void onResume() {
@@ -102,6 +122,9 @@ public class OpenCameraActivity extends Activity implements View.OnClickListener
      * 拍照
      */
     private void takePicture() {
+        if(null == mCameraLoader){
+            return;
+        }
         mCameraLoader.takePicture(null, null, new Camera.PictureCallback() {
             @Override
             public void onPictureTaken(byte[] data, Camera camera) {
@@ -127,7 +150,7 @@ public class OpenCameraActivity extends Activity implements View.OnClickListener
     }
 
     private void switchCamera(){
-        if (null != mCameraSurfaceView) {
+        if (null != mCameraSurfaceView && null != mCameraLoader) {
             mCameraLoader.switchCameraFace(mCameraSurfaceView.getHolder());
         }
     }

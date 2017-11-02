@@ -1,11 +1,13 @@
 package com.example.beata.testapp.utils;
 
 import android.app.Activity;
+import android.graphics.Rect;
 import android.hardware.Camera;
 import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -24,14 +26,29 @@ public class CameraLoader {
     public static final int DESIRED_PREVIEW_FPS = 30;
 
     private Activity mActivity;
-    private  int mCameraID;
-    private  Camera mCamera;
-    private  int mCameraPreviewFps;
-    private  int mOrientation = 0;
+    private int mCameraID;
+    private Camera mCamera;
+    private int mCameraPreviewFps;
+    private int mOrientation = 0;
 
     private  int mFontCameraId = -1;
     private  int mBackCameraId = -1;
     public  boolean mUseFontCamera = true;
+
+    private FocusCallback mMyFocusCallback;
+
+    public interface FocusCallback {
+        void onAutoFocus(boolean success);
+    }
+
+    Camera.AutoFocusCallback mAutoFocusCallback = new Camera.AutoFocusCallback(){
+        @Override
+        public void onAutoFocus(boolean success, Camera camera) {
+            if (null != mMyFocusCallback){
+                mMyFocusCallback.onAutoFocus(success);
+            }
+        }
+    };
 
     public CameraLoader(Activity activity, boolean useFontCamera){
         initCameraInfo();
@@ -65,7 +82,6 @@ public class CameraLoader {
         }
     }
 
-
     /**
      * 根据ID打开相机
      * @param cameraID
@@ -92,16 +108,25 @@ public class CameraLoader {
             mUseFontCamera = false;
         }
 
-        Camera.Parameters parameters = mCamera.getParameters();
-        mCameraPreviewFps = chooseFixedPreviewFps(parameters, expectFps * 1000);
-        parameters.setRecordingHint(true);
-        mCamera.setParameters(parameters);
         setPreviewSize(mCamera, CameraLoader.DEFAULT_WIDTH, CameraLoader.DEFAULT_HEIGHT);
         setPictureSize(mCamera, CameraLoader.DEFAULT_WIDTH, CameraLoader.DEFAULT_HEIGHT);
         calculateCameraPreviewOrientation(mActivity);
         mCamera.setDisplayOrientation(mOrientation);
+
+        Camera.Parameters parameters = mCamera.getParameters();
+        mCameraPreviewFps = chooseFixedPreviewFps(parameters, expectFps * 1000);
+        parameters.setRecordingHint(true);
+        List<String> modes = parameters.getSupportedFocusModes();
+        if (modes.contains(Camera.Parameters.FOCUS_MODE_AUTO)){
+            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+        }
+        mCamera.setParameters(parameters);
+
     }
 
+    public void setAutoFocus(){
+        mCamera.autoFocus(mAutoFocusCallback);
+    }
 
     /**
      * 选择合适的FPS
@@ -371,5 +396,9 @@ public class CameraLoader {
         Log.d("hby", "calculatePictureOrientation result = "+result);
         return result;
 
+    }
+
+    public void setAutoFocusCallback(FocusCallback focusCallback) {
+        this.mMyFocusCallback = focusCallback;
     }
 }

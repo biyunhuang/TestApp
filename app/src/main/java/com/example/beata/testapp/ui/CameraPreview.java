@@ -1,13 +1,12 @@
 package com.example.beata.testapp.ui;
 
 import android.content.Context;
-import android.hardware.Camera;
 import android.os.Process;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import com.example.beata.testapp.utils.CameraUtils;
+import com.example.beata.testapp.utils.CameraLoader;
 
 
 /**
@@ -19,10 +18,12 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     private static final String TAG = CameraPreview.class.getSimpleName();
 
     private SurfaceHolder mHolder;
+    CameraLoader mCameraLoader;
 
-    public CameraPreview(Context context) {
+    public CameraPreview(Context context, CameraLoader cameraLoader) {
         super(context);
 
+        mCameraLoader = cameraLoader;
         mHolder = getHolder();
         mHolder.addCallback(this);
     }
@@ -30,17 +31,17 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         Log.d("hby", "surfaceCreated threadId = "+Process.myTid());
-        CameraUtils.openFrontalCamera(CameraUtils.DESIRED_PREVIEW_FPS);
+        mCameraLoader.initCamera();
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        CameraUtils.releaseCamera();
+        mCameraLoader.releaseCamera();
     }
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
-        CameraUtils.startPreviewDisplay(holder);
+        mCameraLoader.startPreviewDisplay(holder);
     }
 
 }

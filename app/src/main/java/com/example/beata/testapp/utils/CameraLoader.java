@@ -1,7 +1,6 @@
 package com.example.beata.testapp.utils;
 
 import android.app.Activity;
-import android.content.Context;
 import android.hardware.Camera;
 import android.util.Log;
 import android.view.Surface;
@@ -15,23 +14,41 @@ import java.util.List;
  * Created by huangbiyun on 2017/10/31.
  */
 
-public class CameraUtils {
+public class CameraLoader {
+
+    private static final String TAG = CameraLoader.class.getSimpleName();
 
     // 相机默认宽高，相机的宽度和高度跟屏幕坐标不一样，手机屏幕的宽度和高度是反过来的。
     public static final int DEFAULT_WIDTH = 1280;
     public static final int DEFAULT_HEIGHT = 720;
     public static final int DESIRED_PREVIEW_FPS = 30;
 
-    private static int mCameraID;
-    private static Camera mCamera;
-    private static int mCameraPreviewFps;
-    private static int mOrientation = 0;
+    private Activity mActivity;
+    private  int mCameraID;
+    private  Camera mCamera;
+    private  int mCameraPreviewFps;
+    private  int mOrientation = 0;
 
-    private static int mFontCameraId = -1;
-    private static int mBackCameraId = -1;
-    public static boolean mUseFontCamera = true;
+    private  int mFontCameraId = -1;
+    private  int mBackCameraId = -1;
+    public  boolean mUseFontCamera = true;
 
-    public static void initCameraInfo(){
+    public CameraLoader(Activity activity, boolean useFontCamera){
+        initCameraInfo();
+        mUseFontCamera = useFontCamera;
+        mActivity = activity;
+        Log.d(TAG, "CameraLoader instance");
+    }
+
+    public void initCamera(){
+        if (mUseFontCamera){
+            openCamera(mFontCameraId, DESIRED_PREVIEW_FPS);
+        } else {
+            openCamera(mBackCameraId, DESIRED_PREVIEW_FPS);
+        }
+    }
+
+    void initCameraInfo(){
         if(mFontCameraId > 0 && mBackCameraId > 0){
             return;
         }
@@ -46,33 +63,15 @@ public class CameraUtils {
                 mFontCameraId = i;
             }
         }
-
-        mCameraID = mFontCameraId;
     }
 
-    /**
-     * 打开相机，默认打开前置相机
-     *
-     * @param expectFps
-     */
-    public static void openFrontalCamera(int expectFps) {
-        if (mCamera != null) {
-            throw new RuntimeException("camera already initialized!");
-        }
-
-        try{
-            openCamera(mFontCameraId, expectFps);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
 
     /**
      * 根据ID打开相机
      * @param cameraID
      * @param expectFps
      */
-    public static void openCamera(int cameraID, int expectFps) {
+    void openCamera(int cameraID, int expectFps) {
         if (mCamera != null) {
             throw new RuntimeException("camera already initialized!");
         }
@@ -94,11 +93,12 @@ public class CameraUtils {
         }
 
         Camera.Parameters parameters = mCamera.getParameters();
-        mCameraPreviewFps = CameraUtils.chooseFixedPreviewFps(parameters, expectFps * 1000);
+        mCameraPreviewFps = chooseFixedPreviewFps(parameters, expectFps * 1000);
         parameters.setRecordingHint(true);
         mCamera.setParameters(parameters);
-        setPreviewSize(mCamera, CameraUtils.DEFAULT_WIDTH, CameraUtils.DEFAULT_HEIGHT);
-        setPictureSize(mCamera, CameraUtils.DEFAULT_WIDTH, CameraUtils.DEFAULT_HEIGHT);
+        setPreviewSize(mCamera, CameraLoader.DEFAULT_WIDTH, CameraLoader.DEFAULT_HEIGHT);
+        setPictureSize(mCamera, CameraLoader.DEFAULT_WIDTH, CameraLoader.DEFAULT_HEIGHT);
+        calculateCameraPreviewOrientation(mActivity);
         mCamera.setDisplayOrientation(mOrientation);
     }
 
@@ -110,7 +110,7 @@ public class CameraUtils {
      * @param expectedThoudandFps 期望的FPS
      * @return
      */
-    public static int chooseFixedPreviewFps(Camera.Parameters parameters, int expectedThoudandFps) {
+    int chooseFixedPreviewFps(Camera.Parameters parameters, int expectedThoudandFps) {
         List<int[]> supportedFps = parameters.getSupportedPreviewFpsRange();
         for (int[] entry : supportedFps) {
             if (entry[0] == entry[1] && entry[0] == expectedThoudandFps) {
@@ -136,7 +136,7 @@ public class CameraUtils {
      * @param expectWidth
      * @param expectHeight
      */
-    public static void setPreviewSize(Camera camera, int expectWidth, int expectHeight) {
+    void setPreviewSize(Camera camera, int expectWidth, int expectHeight) {
         Camera.Parameters parameters = camera.getParameters();
         Camera.Size size = calculatePerfectSize(parameters.getSupportedPreviewSizes(), expectWidth, expectHeight);
         parameters.setPreviewSize(size.width, size.height);
@@ -149,7 +149,7 @@ public class CameraUtils {
      * @param expectWidth
      * @param expectHeight
      */
-    public static void setPictureSize(Camera camera, int expectWidth, int expectHeight) {
+    void setPictureSize(Camera camera, int expectWidth, int expectHeight) {
         Camera.Parameters parameters = camera.getParameters();
         Camera.Size size = calculatePerfectSize(parameters.getSupportedPictureSizes(), expectWidth, expectHeight);
         parameters.setPictureSize(size.width, size.height);
@@ -163,7 +163,7 @@ public class CameraUtils {
      * @param expectHeight
      * @return
      */
-    public static Camera.Size calculatePerfectSize(List<Camera.Size> sizes, int expectWidth, int expectHeight) {
+    Camera.Size calculatePerfectSize(List<Camera.Size> sizes, int expectWidth, int expectHeight) {
 
         sortList(sizes);
         Camera.Size result = sizes.get(0);
@@ -201,7 +201,7 @@ public class CameraUtils {
      * 排序
      * @param list
      */
-    private static void sortList(List<Camera.Size> list) {
+    void sortList(List<Camera.Size> list) {
         Collections.sort(list, new Comparator<Camera.Size>() {
             @Override
             public int compare(Camera.Size pre, Camera.Size after) {
@@ -219,7 +219,7 @@ public class CameraUtils {
      * 切换相机
      * @param holder
      */
-    public static void switchCameraFace(SurfaceHolder holder){
+    public void switchCameraFace(SurfaceHolder holder){
         if(mUseFontCamera){
             switchCamera(mBackCameraId, holder);
         } else {
@@ -227,20 +227,20 @@ public class CameraUtils {
         }
     }
 
-    private static void switchCamera(int cameraID, SurfaceHolder holder) {
+    void switchCamera(int cameraID, SurfaceHolder holder) {
         if (mCameraID == cameraID) {
             return;
         }
         // 释放原来的相机
         releaseCamera();
         // 打开相机
-        openCamera(cameraID, CameraUtils.DESIRED_PREVIEW_FPS);
+        openCamera(cameraID, CameraLoader.DESIRED_PREVIEW_FPS);
         // 打开预览
         startPreviewDisplay(holder);
     }
 
 
-    public static void startPreviewDisplay(SurfaceHolder holder) {
+    public void startPreviewDisplay(SurfaceHolder holder) {
         if (mCamera == null) {
             throw new IllegalStateException("Camera must be set when start preview");
         }
@@ -256,7 +256,7 @@ public class CameraUtils {
     /**
      * 释放相机
      */
-    public static void releaseCamera() {
+    public void releaseCamera() {
         if (mCamera != null) {
             mCamera.stopPreview();
             mCamera.release();
@@ -267,7 +267,7 @@ public class CameraUtils {
     /**
      * 开始预览
      */
-    public static void startPreview() {
+    public void startPreview() {
         if (mCamera != null) {
             try{
                 mCamera.startPreview();
@@ -280,7 +280,7 @@ public class CameraUtils {
     /**
      * 停止预览
      */
-    public static void stopPreview() {
+    public void stopPreview() {
         if (mCamera != null) {
             try{
                 mCamera.stopPreview();
@@ -293,7 +293,7 @@ public class CameraUtils {
     /**
      * 拍照
      */
-    public static void takePicture(Camera.ShutterCallback shutterCallback,
+    public void takePicture(Camera.ShutterCallback shutterCallback,
                                    Camera.PictureCallback rawCallback,
                                    Camera.PictureCallback pictureCallback) {
         if (mCamera != null) {
@@ -308,7 +308,7 @@ public class CameraUtils {
      * 这里Nexus5X的相机简直没法吐槽，后置摄像头倒置了，切换摄像头之后就出现问题了。
      * @param activity
      */
-    public static int calculateCameraPreviewOrientation(Activity activity) {
+    public int calculateCameraPreviewOrientation(Activity activity) {
         Camera.CameraInfo info = new Camera.CameraInfo();
         Camera.getCameraInfo(mCameraID, info);
         int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
@@ -342,7 +342,7 @@ public class CameraUtils {
         return result;
     }
 
-    public static int calculatePictureOrientation(Activity activity){
+    public int calculatePictureOrientation(Activity activity){
         Camera.CameraInfo info = new Camera.CameraInfo();
         Camera.getCameraInfo(mCameraID, info);
         int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();

@@ -16,7 +16,7 @@ import android.widget.FrameLayout;
 
 import com.example.beata.testapp.R;
 import com.example.beata.testapp.ui.CameraPreview;
-import com.example.beata.testapp.utils.CameraUtils;
+import com.example.beata.testapp.utils.CameraLoader;
 import com.example.beata.testapp.utils.FileUtils;
 import com.example.beata.testapp.utils.ImageUtils;
 
@@ -33,6 +33,7 @@ public class OpenCameraActivity extends Activity implements View.OnClickListener
 
     public static String TAG = OpenCameraActivity.class.getSimpleName();
     private CameraPreview mCameraSurfaceView;
+    private CameraLoader mCameraLoader;
     private Button mBtnTake;
     private Button mBtnSwitch;
 
@@ -46,10 +47,10 @@ public class OpenCameraActivity extends Activity implements View.OnClickListener
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_open_camera);
 
-        mCameraSurfaceView = new CameraPreview(OpenCameraActivity.this);
+        mCameraLoader = new CameraLoader(OpenCameraActivity.this, true);
+        mCameraSurfaceView = new CameraPreview(OpenCameraActivity.this, mCameraLoader);
         FrameLayout frameLayout = (FrameLayout) findViewById(R.id.camera_preview);
         frameLayout.addView(mCameraSurfaceView);
-        CameraUtils.calculateCameraPreviewOrientation(OpenCameraActivity.this);
 
         mBtnTake = (Button) findViewById(R.id.btn_take);
         mBtnTake.setOnClickListener(this);
@@ -62,18 +63,26 @@ public class OpenCameraActivity extends Activity implements View.OnClickListener
     @Override
     protected void onResume() {
         super.onResume();
-        CameraUtils.startPreview();
+        if(null != mCameraLoader){
+            mCameraLoader.startPreview();
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        CameraUtils.stopPreview();
+        if (null != mCameraLoader){
+            mCameraLoader.stopPreview();
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (null != mCameraLoader){
+            mCameraLoader.releaseCamera();
+            mCameraLoader = null;
+        }
         Log.d(TAG, "onDestroy()");
     }
 
@@ -93,13 +102,13 @@ public class OpenCameraActivity extends Activity implements View.OnClickListener
      * 拍照
      */
     private void takePicture() {
-        CameraUtils.takePicture(null, null, new Camera.PictureCallback() {
+        mCameraLoader.takePicture(null, null, new Camera.PictureCallback() {
             @Override
             public void onPictureTaken(byte[] data, Camera camera) {
-                CameraUtils.stopPreview();
+                mCameraLoader.stopPreview();
                 Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
                 if (bitmap != null) {
-                    bitmap = ImageUtils.getRotatedBitmap(bitmap, CameraUtils.calculatePictureOrientation(OpenCameraActivity.this));
+                    bitmap = ImageUtils.getRotatedBitmap(bitmap, mCameraLoader.calculatePictureOrientation(OpenCameraActivity.this));
                     File path = FileUtils.getOutputMediaFile(FileUtils.MEDIA_TYPE_IMAGE);
                     try {
                         FileOutputStream fout = new FileOutputStream(path);
@@ -112,15 +121,14 @@ public class OpenCameraActivity extends Activity implements View.OnClickListener
                         e.printStackTrace();
                     }
                 }
-                CameraUtils.startPreview();
+                mCameraLoader.startPreview();
             }
         });
     }
 
     private void switchCamera(){
         if (null != mCameraSurfaceView) {
-            CameraUtils.switchCameraFace(mCameraSurfaceView.getHolder());
-            CameraUtils.calculateCameraPreviewOrientation(OpenCameraActivity.this);
+            mCameraLoader.switchCameraFace(mCameraSurfaceView.getHolder());
         }
     }
 

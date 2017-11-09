@@ -1,6 +1,7 @@
 package com.example.beata.testapp.utils;
 
 import android.app.Activity;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.hardware.Camera;
 import android.util.Log;
@@ -122,10 +123,6 @@ public class CameraLoader {
         }
         mCamera.setParameters(parameters);
 
-    }
-
-    public void setAutoFocus(){
-        mCamera.autoFocus(mAutoFocusCallback);
     }
 
     /**
@@ -400,5 +397,33 @@ public class CameraLoader {
 
     public void setAutoFocusCallback(FocusCallback focusCallback) {
         this.mMyFocusCallback = focusCallback;
+    }
+
+    public void onFocus(Point point) {
+        if (null == mCamera){
+            return;
+        }
+
+        Camera.Parameters parameters = mCamera.getParameters();
+        if (parameters.getMaxNumFocusAreas() > 0){
+            List<Camera.Area> areas = new ArrayList<Camera.Area>();
+            int left = point.x - 300;
+            int top = point.y - 300;
+            int right = point.x + 300;
+            int bottom = point.y + 300;
+            left = left < -1000 ? -1000 : left;
+            top = top < -1000 ? -1000 : top;
+            right = right > 1000 ? 1000 : right;
+            bottom = bottom > 1000 ? 1000 : bottom;
+            areas.add(new Camera.Area(new Rect(left, top, right, bottom), 100));
+            parameters.setFocusAreas(areas);
+
+            try{
+                mCamera.setParameters(parameters);
+                mCamera.autoFocus(mAutoFocusCallback);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
     }
 }

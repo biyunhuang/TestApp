@@ -133,6 +133,11 @@
             android:parentActivityName=".activity.MainActivity">
         </activity>
 
+        <activity android:name=".activity.MyScrollerActivity"
+            android:label="@string/title_anim_activity"
+            android:theme="@style/CustomAppTheme"
+            android:parentActivityName=".activity.MainActivity"/>
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.example.beata.testapp.fileprovider"

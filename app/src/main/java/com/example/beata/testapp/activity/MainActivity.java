@@ -74,6 +74,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         findViewById(R.id.btn_service).setOnClickListener(this);
         findViewById(R.id.btn_video).setOnClickListener(this);
         findViewById(R.id.btn_open_camera).setOnClickListener(this);
+        findViewById(R.id.btn_scrollview).setOnClickListener(this);
 
         updateValuesFromBundle(savedInstanceState);
     }
@@ -189,6 +190,10 @@ public class MainActivity extends Activity implements View.OnClickListener,
             case R.id.btn_open_camera:
                 Intent intent8 = new Intent(MainActivity.this, OpenCameraActivity.class);
                 startActivity(intent8);
+                break;
+            case R.id.btn_scrollview:
+                Intent intent9 = new Intent(MainActivity.this, MyScrollerActivity.class);
+                startActivity(intent9);
                 break;
             default:
                 break;
